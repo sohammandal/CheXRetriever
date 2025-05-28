@@ -2,13 +2,13 @@
 
 **CheXRetriever** is a two-stage multimodal pipeline that takes free-text **radiology impressions** as input and retrieves the most relevant **chest X-ray images** from a labeled image database.
 
-Built on the **CheXpert dataset**, this system bridges natural language and medical imaging using a combination of **Bio_ClinicalBERT** and **ResNet-50** for multi-label classification and label-conditioned retrieval.
+Built on the **CheXpert dataset**, this system bridges natural language and medical imaging using a combination of **Bio_ClinicalBERT**, **Vision Transformer (ViT)** and **ResNet-50** for multi-label classification and label-conditioned retrieval.
 
 ---
 
 ## Project Overview
 
-<img src="https://github.com/sohammandal/CheXRetriever/assets/pipeline_diagram.png" alt="pipeline" width="800"/>
+<img src="assets/pipeline_diagram.png" alt="pipeline" width="800"/>
 
 1. **Stage 1 – Impression ➝ Label (Text Classification)**
    - Model: `Bio_ClinicalBERT`
@@ -16,7 +16,7 @@ Built on the **CheXpert dataset**, this system bridges natural language and medi
    - Output: 14-label CheXpert disease vector
 
 2. **Stage 2 – Label ➝ Image (Similarity Search)**
-   - Model: `ResNet-50`
+   - Models: `Vision Transformer (ViT)` and `ResNet-50`
    - Input: Predicted label vector
    - Output: Top-K most similar X-ray images via cosine similarity
 
@@ -77,27 +77,28 @@ visualize_top_k_images_with_scores(query_vector, df_preds, k=5)
 
 Visual and score breakdown of retrieved images:
 
-<img src="https://github.com/yourname/CheXRetriever/assets/retrieval_output.png" width="700"/>
+<img src="assets/retrieval_output.png" alt="pipeline" width="800"/>
+
 
 ---
 
 ## Results (ResNet using Test Set)
 
-| Metric      | Score  |
-| ----------- | ------ |
-| Recall\@5   | 0.4464 |
-| mAP\@5      | 0.0622 |
-| Mean IOU\@5 | 0.2842 |
+| Metric        | ViT     | ResNet  | Better Performer |
+|---------------|---------|---------|------------------|
+| Recall@5      | 0.3268  | 0.4464  | ResNet       |
+| mAP@5         | 0.0675  | 0.0622  | ViT (barely)     |
+| Mean IOU@5    | 0.1780  | 0.2842  | ResNet       |
 
 ---
 
 ## Key Features
 
-* ✅ 14-label multi-label classification from radiology text
-* ✅ Fast cosine-similarity-based retrieval over 20K+ images
-* ✅ Visual + quantitative evaluation (Recall, mAP, IOU)
-* ✅ Compatible with Google Colab (A100 / T4) + GDrive paths
-* ✅ Modular design for swapping BERT/ResNet with other models
+* 14-label multi-label classification from radiology text
+* Fast cosine-similarity-based retrieval over 20K+ images
+* Visual + quantitative evaluation (Recall, mAP, IOU)
+* Compatible with Google Colab (A100 / T4) + GDrive paths
+* Modular design for swapping BERT/ResNet with other models
 
 ---
 
@@ -127,45 +128,26 @@ pip install -r requirements.txt
 
 ---
 
-## 🤝 Contributors
+## Contributors
 
-* Soham Mandal (NLP Lead)
-* \[Teammate Name] (Vision Lead)
-* University of Chicago – ML II Final Project
-
----
-
-## 📌 Citation
-
-If using this work, please cite or acknowledge:
-
-```
-@project{chexretriever2025,
-  title={CheXRetriever: From Radiology Impressions to Chest X-ray Retrieval},
-  author={Mandal, Soham and Teammate},
-  year={2025},
-  institution={University of Chicago}
-}
-```
+* Mahima Masetty
+* Sara Chaker
+* Soham Mandal
+* Zeel Patel
 
 ---
 
-## 🧭 Future Work
+## Future Work
 
-* Integrate CLIP-style joint embeddings
-* Fine-tune ViT on CheXpert labels
-* Expand to other radiology modalities (e.g., CT)
+- **End-to-End Retrieval**: Train models to go directly from text to images using contrastive (CLIP-style) learning.
+- **Zero-Shot Classification**: Use prompts and few-shot examples to handle unseen conditions.
+- **Explainability**: Add attention maps to visualize why images were retrieved.
+- **Multi-Modal Pretraining**: Pretrain on large corpora of report–image pairs for better generalization.
+- **Clinical Interface**: Build a lightweight tool for impression-based image search in EHR systems.
 
 ---
 
-## 🔗 License
+## License
 
 MIT License — for academic use only.
 Please review the [CheXpert dataset terms](https://stanfordmlgroup.github.io/competitions/chexpert/) before use.
-
-```
-
----
-
-Let me know if you'd like help adding images for the `pipeline_diagram.png` and `retrieval_output.png` placeholders or turning this into a GitHub Pages mini-site.
-```
